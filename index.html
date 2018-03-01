@@ -10,8 +10,12 @@
             input { border: 1; padding: 10px; width: 90%; margin-right: .5%; }
             button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
             
-            #messages { list-style-type: none; margin: 0; padding-top: 5%; padding-bottom: 5%; }
-            #messages li { padding: 5px 10px; }
+            .userListContainer { padding: 5px 20px; width: 14%; height: 100%; margin: 2px; float:right; background-color: #d5d5ff; top: 0px; border: 1px solid #eee;}
+            .userList li {word-wrap: break-word;}
+            .userList li:nth-child(odd) { background: #eee; }
+            
+            #messages { list-style-type: none; margin: 0; padding-top: 5%; padding-bottom: 5%; width: 85%;}
+            #messages li { padding: 5px 10px; word-wrap: break-word;}
             #messages li:nth-child(odd) { background: #eee; }
         </style>
     </head>
@@ -33,6 +37,9 @@
             socket.on('chat message', function(msg) {
                 $('#messages').append($('<li>').text(msg));
             });
+            socket.on('user join', function(id) {
+                $('#userList').append($('<li>').text(id));
+            });
         });
     </script>
     <body>
@@ -42,6 +49,11 @@
             </form>
         </div>
         <ul id="messages"></ul>
+        <div class="userListContainer">
+            <h2>Users</h2><br/>
+            <ul id="userList">
+            </ul>
+        </div>
         <div class="bottomBox">
             <form action="" id="messageForm">
                 <input id="m" autocomplete="off" /><button>Send</button>
