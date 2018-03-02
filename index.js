@@ -13,6 +13,8 @@ io.on('connection', function(socket) {
     people[socket.id] = socket.id;
     console.log(people[socket.id] + ' connected.');
     
+	io.emit('populate list', people);
+	
     for (var i = 0; i < people.length; i++) {
         io.emit('user join', people[i]);
     }
@@ -31,14 +33,16 @@ io.on('connection', function(socket) {
         io.emit('user join', nick);
     });
     
-    
     socket.on('chat message', function(msg) {
         io.emit('chat message', people[socket.id] + ": " + msg);
         console.log(people[socket.id] + ": " + msg);
     });
     
     socket.on('disconnect', function() {
-       console.log(people[socket.id] + ' disconnected.');
+		console.log(people[socket.id] + ' disconnected.');
+		socket.broadcast.emit('user leave', people[socket.id]);
+		socket.broadcast.emit('chat message', people[socket.id] + ' disconnected.');
+		delete(people[socket.id]);
     });
 });
 
