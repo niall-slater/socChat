@@ -3,19 +3,22 @@
     <head>
         <title>Socket.IO chat</title>
         <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font: 13px Helvetica, Arial; }
-            .topBox {padding: 3px; position: fixed; top: 0; width: 100%; }
-            .bottomBox {padding: 3px; position: fixed; bottom: 0; width: 100%; }
-            input { border: 1; padding: 10px; width: 90%; margin-right: .5%; }
-            button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+            body { font: 13px Helvetica, Arial; display: flex; height: 90vh; }
             
-            .userListContainer { padding: 5px 20px; width: 14%; height: 100%; margin: 2px; float:right; background-color: #d5d5ff; top: 0px; border: 1px solid #eee;}
+            .mainWrapper {width: 80%; height: 90%; top: 0; position: fixed; left: 2px;}
+            .sideBarWrapper {width: 16%; position: fixed; right: 2px;}
+            
+            .topBox {padding: 3px; position: relative; top: 0; width: 100%;}
+            .bottomBox {padding: 3px; position: fixed; bottom: 0; width: 81%;}
+            input { border: 1; padding: 10px; width: 90%;}
+            button { background: rgb(130, 224, 255); border: none; padding: 10px; }
+            
+            .userListContainer { padding: 5px 5px; background-color: #d5d5ff; top: 0px;}
             .userList li {word-wrap: break-word;}
             .userList li:nth-child(odd) { background: #eee; }
             
-            #messages { list-style-type: none; margin: 0; padding-top: 5%; padding-bottom: 5%; width: 85%;}
-            #messages li { padding: 5px 10px; word-wrap: break-word;}
+            #messages { list-style-type: none; margin-left: 0; padding-left: 1%; padding-bottom: 1%; width: 95%; height: 90%; overflow: auto;}
+            #messages li { padding: 5px 1px; word-wrap: break-word;}
             #messages li:nth-child(odd) { background: #eee; }
         </style>
     </head>
@@ -37,6 +40,8 @@
 			});
 			socket.on('chat message', function(msg) {
 				$('#messages').append($('<li>').text(msg));
+                var el = document.getElementById("messages");
+                el.scrollTop = el.scrollHeight;
 			});
 			socket.on('user join', function(id) {
 				//$('#userList').append($('<li id=\"' + id + '\">').text(id));
@@ -67,21 +72,27 @@
 		}
 	</script>
     <body>
-        <div class="topBox">
-            <form action="" id="nameForm">
-                <input id="n" autocomplete="off" /><button>Set name</button>
-            </form>
+        <div class="mainWrapper">
+            <div class="topBox">
+                <form action="" id="nameForm">
+                    <input id="n" autocomplete="off" /><button>Set name</button>
+                </form>
+            </div>
+            <ul id="messages"></ul>
+            <div class="bottomBox">
+                <form action="" id="messageForm">
+                    <input id="m" autocomplete="off" /><button>Send</button>
+                </form>
+            </div>
         </div>
-        <ul id="messages"></ul>
-        <div class="userListContainer">
-            <h2>Users</h2><br/>
-            <ul id="userList">
-            </ul>
+        
+        <div class="sideBarWrapper">
+            <div class="userListContainer">
+                <h3>Users</h3>
+                <ul id="userList">
+                </ul>
+            </div>
         </div>
-        <div class="bottomBox">
-            <form action="" id="messageForm">
-                <input id="m" autocomplete="off" /><button>Send</button>
-            </form>
-        </div>
+            
     </body>
 </html>
