@@ -27,22 +27,30 @@
     <script>
 		$(function () {
 			var socket = io();
+            
+			if (getCookie('socChat_name') != null) {
+				socket.emit('name load', getCookie('socChat_name'));
+			}
+            
 			$('#messageForm').submit(function() {
 				socket.emit('chat message', $('#m').val());
 				$('#m').val('');
 				return false;
 			});
+            
 			$('#nameForm').submit(function() {
 				socket.emit('name change', $('#n').val());
 				document.cookie = "socChat_name=" + $('#n').val() + ";expires=Wed, 1 Jan 2031 ;";
 				$('#n').val('');
 				return false;
 			});
+            
 			socket.on('chat message', function(msg) {
 				$('#messages').append($('<li>').text(msg));
                 var el = document.getElementById("messages");
                 el.scrollTop = el.scrollHeight;
 			});
+            
 			socket.on('user leave', function(id) {
 				$('#' + id).remove();
 			});
@@ -56,10 +64,14 @@
 					$('#userList').append($('<li id=\"' + id + '\">').text(getCookie('socChat_name')));
 				}
 			});
-			
-			if (getCookie('socChat_name') != null) {
-				socket.emit('name load', getCookie('socChat_name'));
-			}
+            
+			socket.on('populate messages', function(history) {
+                
+				for (var i = 0; i < history.length; i++) {
+                    console.log("messagelog is " + history[i]);
+				    $('#messages').append($('<li>').text(history[i]));
+                }
+			});
 		});
 
 		function getCookie(name) {
