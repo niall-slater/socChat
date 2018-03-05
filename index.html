@@ -61,14 +61,13 @@
 				
 				for (var i = 0; i < list.length; i++) {
 					var id = list[i];
-					$('#userList').append($('<li id=\"' + id + '\">').text(getCookie('socChat_name')));
+					$('#userList').append('<li id=\"' + id + '\">' + id);
 				}
 			});
             
 			socket.on('populate messages', function(history) {
                 
 				for (var i = 0; i < history.length; i++) {
-                    console.log("messagelog is " + history[i]);
 				    $('#messages').append($('<li>').text(history[i]));
                 }
 			});

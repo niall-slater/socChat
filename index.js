@@ -33,6 +33,7 @@ io.on('connection', function(socket) {
         io.emit('chat message', nick + " joined the chat.");
         console.log(nick + " joined the chat.");
         io.emit('user join', nick);
+        io.emit('populate list', people);
     });
     
     socket.on('chat message', function(msg) {
@@ -49,6 +50,10 @@ io.on('connection', function(socket) {
 		delete(people[socket.id]);
     });
 });
+
+function getNameFromID(id) {
+    return people[id];
+}
 
 http.listen(3000, function() {
     console.log('listening on *:3000');
