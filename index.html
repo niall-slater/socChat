@@ -25,11 +25,16 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
+        var username = 'Guest-' + Math.floor(Math.random()*99);
+        
 		$(function () {
 			var socket = io();
             
+            io.userName = username;
+            
 			if (getCookie('socChat_name') != null) {
-				socket.emit('name load', getCookie('socChat_name'));
+                username = getCookie('socChat_name');
+				socket.emit('name load', username);
 			}
             
 			$('#messageForm').submit(function() {
@@ -39,8 +44,9 @@
 			});
             
 			$('#nameForm').submit(function() {
-				socket.emit('name change', $('#n').val());
-				document.cookie = "socChat_name=" + $('#n').val() + ";expires=Wed, 1 Jan 2031 ;";
+                username = $('#n').val();
+				socket.emit('name change', username);
+				document.cookie = "socChat_name=" + username + ";expires=Wed, 1 Jan 2031 ;";
 				$('#n').val('');
 				return false;
 			});
@@ -51,17 +57,22 @@
                 el.scrollTop = el.scrollHeight;
 			});
             
-			socket.on('user leave', function(id) {
-				$('#' + id).remove();
-			});
-			
+            //Clear and repopulate user list
 			socket.on('populate list', function(people) { 
+                
+				$('#userList').empty();
 				
 				var list = Object.keys(people);
-				
+                
 				for (var i = 0; i < list.length; i++) {
 					var id = list[i];
-					$('#userList').append('<li id=\"' + id + '\">' + id);
+                    
+                    if (id == socket.id) {
+                        continue;
+                    } else {
+					   $('#userList').append('<li id=\"' + id + '\">' + id);
+                    }
+                    
 				}
 			});
             

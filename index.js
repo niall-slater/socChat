@@ -11,7 +11,7 @@ app.get('/', function(req, res) {
 
 io.on('connection', function(socket) {
     
-    people[socket.id] = socket.id;
+    people[socket.id] = socket.username;
     console.log(people[socket.id] + ' connected.');
     
 	io.emit('populate list', people);
@@ -45,9 +45,9 @@ io.on('connection', function(socket) {
     
     socket.on('disconnect', function() {
 		console.log(people[socket.id] + ' disconnected.');
-		socket.broadcast.emit('user leave', people[socket.id]);
 		socket.broadcast.emit('chat message', people[socket.id] + ' disconnected.');
 		delete(people[socket.id]);
+		io.emit('populate list', people);
     });
 });
 
