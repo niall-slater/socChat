@@ -3,23 +3,23 @@
     <head>
         <title>SoA chat | be excellent to each other</title>
         <style>
-            body { font: 13px Helvetica, Arial; display: flex; height: 90vh; }
+            body { font: 13px Helvetica, Arial; display: flex; height: 90vh; background-color: #e0fffb}
             
             .mainWrapper {width: 80%; height: 90%; top: 0; position: fixed; left: 2px;}
-            .sideBarWrapper {width: 16%; position: fixed; right: 2px;}
+            .sideBarWrapper {width: 16%; position: fixed; right: 2px; top:0px;}
             
             .topBox {padding: 3px; position: relative; top: 0; width: 100%;}
             .bottomBox {padding: 3px; position: fixed; bottom: 0; width: 81%;}
-            input { border: 1; padding: 10px; width: 90%;}
-            button { background: rgb(130, 224, 255); border: none; padding: 10px; }
+            input { border: 1; padding: 10px; width: 80%;}
+            button { padding: 3px; background: rgb(130, 224, 255); border: 1; padding: 10px; }
             
-            .userListContainer { padding: 5px 5px; background-color: #d5d5ff; top: 0px;}
+            .userListContainer { padding: 0px 5px; background-color: #ffffff; top: 0px; border-radius: 2px; border: 2px solid #eee;}
             .userList li {word-wrap: break-word;}
             .userList li:nth-child(odd) { background: #eee; }
             
-            #messages { list-style-type: none; margin-left: 0; padding-left: 1%; padding-bottom: 1%; width: 95%; height: 90%; overflow: auto;}
+            #messages { list-style-type: none; margin-left: 0; padding-left: 1%; padding-bottom: 1%; width: 95%; height: 80vh; overflow: auto;}
             #messages li { padding: 5px 1px; word-wrap: break-word;}
-            #messages li:nth-child(odd) { background: #eee; }
+            #messages li:nth-child(odd) { background: #ffffff; }
         </style>
     </head>
     <script src="/socket.io/socket.io.js"></script>
