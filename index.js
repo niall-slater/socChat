@@ -11,10 +11,10 @@ app.get('/', function(req, res) {
 
 io.on('connection', function(socket) {
     
-    people[socket.id] = socket.username;
+    people[socket.id] = socket.id;
     console.log(people[socket.id] + ' connected.');
     
-	io.emit('populate list', people);
+	io.emit('refresh list', people);
     io.emit('populate messages', messageHistory);
 	
     for (var i = 0; i < people.length; i++) {
@@ -33,7 +33,7 @@ io.on('connection', function(socket) {
         io.emit('chat message', nick + " joined the chat.");
         console.log(nick + " joined the chat.");
         io.emit('user join', nick);
-        io.emit('populate list', people);
+        io.emit('refresh list', people);
     });
     
     socket.on('chat message', function(msg) {
@@ -47,7 +47,7 @@ io.on('connection', function(socket) {
 		console.log(people[socket.id] + ' disconnected.');
 		socket.broadcast.emit('chat message', people[socket.id] + ' disconnected.');
 		delete(people[socket.id]);
-		io.emit('populate list', people);
+		io.emit('refresh list', people);
     });
 });
 

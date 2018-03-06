@@ -30,7 +30,7 @@
 		$(function () {
 			var socket = io();
             
-            io.userName = username;
+            socket.emit('name change', username);
             
 			if (getCookie('socChat_name') != null) {
                 username = getCookie('socChat_name');
@@ -58,7 +58,7 @@
 			});
             
             //Clear and repopulate user list
-			socket.on('populate list', function(people) { 
+			socket.on('refresh list', function(people) { 
                 
 				$('#userList').empty();
 				
