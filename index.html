@@ -30,7 +30,7 @@
 		$(function () {
 			var socket = io();
             
-            socket.emit('name change', username);
+            socket.emit('name init', username);
             
 			if (getCookie('socChat_name') != null) {
                 username = getCookie('socChat_name');
@@ -62,18 +62,11 @@
                 
 				$('#userList').empty();
 				
-				var list = Object.keys(people);
-                
-				for (var i = 0; i < list.length; i++) {
-					var id = list[i];
+                for (var key in people) {
+                    var value = people[key];
                     
-                    if (id == socket.id) {
-                        continue;
-                    } else {
-					   $('#userList').append('<li id=\"' + id + '\">' + id);
-                    }
-                    
-				}
+                   $('#userList').append('<li id=\"' + value + '\">' + value);
+                }
 			});
             
 			socket.on('populate messages', function(history) {
