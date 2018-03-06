@@ -15,7 +15,7 @@ io.on('connection', function(socket) {
     console.log(people[socket.id] + ' connected.');
     
 	io.emit('refresh list', people);
-    io.emit('populate messages', messageHistory);
+    //io.emit('populate messages', messageHistory);
     
     socket.on('name init', function(username) {
         var idName = people[socket.id];
@@ -52,7 +52,7 @@ io.on('connection', function(socket) {
     
     socket.on('disconnect', function() {
 		console.log(people[socket.id] + ' disconnected.');
-		socket.broadcast.emit('chat message', people[socket.id] + ' disconnected.');
+		io.emit('chat message', people[socket.id] + ' disconnected.');
 		delete(people[socket.id]);
 		io.emit('refresh list', people);
     });
