@@ -20,6 +20,7 @@
             #messages { list-style-type: none; margin-left: 0; padding-left: 1%; padding-bottom: 1%; width: 95%; height: 80vh; overflow: auto;}
             #messages li { padding: 5px 1px; word-wrap: break-word;}
             #messages li:nth-child(odd) { background: #ffffff; }
+            #messages img {margin: 2px; max-width: 400px;}
         </style>
     </head>
     <script src="/socket.io/socket.io.js"></script>
@@ -89,7 +90,7 @@
             
             socket.on('base64 file', function(msg) {
                 console.log("Received file " + msg.fileName + " from " + msg.username);
-                $('#messages').append('<img src=data:image/jpeg;base64,' + msg.file + '"/>');
+                $('#messages').append($('<img>',{id:msg.fileName,src:msg.file}));
             });
             
         
