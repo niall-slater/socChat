@@ -25,6 +25,9 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
+        
+        /* CLIENTSIDE CHAT SCRIPT */
+        
         var username = 'Guest-' + Math.floor(Math.random()*99);
         
 		$(function () {
@@ -32,6 +35,7 @@
             
             socket.emit('name init', username);
             
+            //Check to see if we've already got a username from a previous session
 			if (getCookie('socChat_name') != null) {
                 username = getCookie('socChat_name');
 				socket.emit('name load', username);
@@ -69,12 +73,41 @@
                 }
 			});
             
+            //Populate the chat window with messages from before we connected
 			socket.on('populate messages', function(history) {
-                
 				for (var i = 0; i < history.length; i++) {
 				    $('#messages').append($('<li>').text(history[i]));
                 }
 			});
+            
+            //Send file on upload
+            $('#uploadFile').bind('change', function(e) {
+                console.log("Sending file");
+                var data = e.originalEvent.target.files[0];
+                readThenSendFile(data);      
+            });
+            
+            socket.on('base64 file', function(msg) {
+                console.log("Received file " + msg.fileName + " from " + msg.username);
+                $('#messages').append('<img src=data:image/jpeg;base64,' + msg.file + '"/>');
+            });
+            
+        
+            function readThenSendFile(data) {
+
+                var reader = new FileReader();
+
+                reader.onload = function(evt){
+                    //Callback for when the file has been loaded
+                    var msg = {};
+                    msg.username = username;
+                    msg.file = evt.target.result;
+                    msg.fileName = data.name;
+                    socket.emit('base64 file', msg);
+                };
+
+                reader.readAsDataURL(data);
+            }
 		});
 
 		function getCookie(name) {
@@ -82,6 +115,7 @@
 			var parts = value.split("; " + name + "=");
 			if (parts.length == 2) return parts.pop().split(";").shift();
 		}
+        
 	</script>
     <body>
         <div class="mainWrapper">
@@ -94,6 +128,9 @@
             <div class="bottomBox">
                 <form action="" id="messageForm">
                     <input id="m" autocomplete="off" autofocus /><button>Send</button>
+                </form>
+                <form action="" id="uploadFile">
+                    <input type="file" name="pic" accept="image/*"/><button>Upload image</button>
                 </form>
             </div>
         </div>

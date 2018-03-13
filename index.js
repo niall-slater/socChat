@@ -1,3 +1,5 @@
+/* SERVER SIDE CHAT SCRIPT */
+
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -55,6 +57,18 @@ io.on('connection', function(socket) {
 		io.emit('chat message', people[socket.id] + ' disconnected.');
 		delete(people[socket.id]);
 		io.emit('refresh list', people);
+    });
+    
+    socket.on('base64 file', function (msg) {
+        console.log('received base64 file ' + msg.fileName + ' from' + msg.username);
+        socket.username = msg.username;
+        io.emit('base64 file', {
+              username: socket.username,
+              file: msg.file,
+              fileName: msg.fileName
+            }
+
+        );
     });
 });
 
