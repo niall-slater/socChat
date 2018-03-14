@@ -9,18 +9,19 @@
             .sideBarWrapper {width: 16%; position: fixed; right: 2px; top:0px;}
             
             .topBox {padding: 3px; position: relative; top: 0; width: 100%;}
-            .bottomBox {padding: 3px; position: fixed; bottom: 0; width: 81%;}
+            .bottomBox {padding: 3px; position: fixed; bottom: 0; width: 81%; height: 20%;}
             input { border: 2px solid rgb(209, 209, 209); border-radius: 4px; margin-right: 2px; padding: 10px; width: 80%;}
             button { padding: 3px; background: #a8fde3; border: 2px solid rgba(204, 204, 204, 0.98); padding: 10px; border-radius: 4px; }
             
-            .userListContainer { padding: 0px 5px; background-color: #ffffff; top: 0px; border-radius: 2px; border: 2px solid #e6e6e6;}
-            .userList li {word-wrap: break-word;}
-            .userList li:nth-child(odd) { background: #eee; }
+            .userListContainer { padding: 0px 5px; background-color: #ffffff; top: 0px; border-radius: 2px; border: 2px solid #e6e6e6; word-wrap: break-word; font-size: .8em;}
+            .userListContainer ul {padding-left: 12px;}
+            .userList li {}
+            .userList li:nth-child(odd) { background: #ddd;}
             
-            #messages { list-style-type: none; margin-left: 0; padding-left: 1%; padding-bottom: 1%; width: 95%; height: 80vh; overflow: auto;}
+            #messages { list-style-type: none; margin-left: 0; padding-left: 1%; padding-bottom: 0px; width: 98%; height: 80%; overflow: auto;}
             #messages li { padding: 5px 1px; word-wrap: break-word;}
             #messages li:nth-child(odd) { background: #ffffff; }
-            #messages img {margin: 2px; max-width: 400px;}
+            #messages img {margin: 2px; max-width: 400px; padding: 8px; background-color: rgba(222, 222, 222, 0.9);}
         </style>
     </head>
     <script src="/socket.io/socket.io.js"></script>
@@ -58,8 +59,7 @@
             
 			socket.on('chat message', function(msg) {
 				$('#messages').append($('<li>').text(msg));
-                var el = document.getElementById("messages");
-                el.scrollTop = el.scrollHeight;
+                scrollToBottom();
 			});
             
             //Clear and repopulate user list
@@ -90,7 +90,9 @@
             
             socket.on('base64 file', function(msg) {
                 console.log("Received file " + msg.fileName + " from " + msg.username);
+                $('#messages').append($('<li>').text(msg.username + " sent an image:"));
                 $('#messages').append($('<img>',{id:msg.fileName,src:msg.file}));
+                scrollToBottom();
             });
             
         
@@ -109,6 +111,11 @@
 
                 reader.readAsDataURL(data);
             }
+            
+            function scrollToBottom() {
+                var el = document.getElementById("messages");
+                el.scrollTop = el.scrollHeight;
+            }
 		});
 
 		function getCookie(name) {
@@ -126,12 +133,13 @@
                 </form>
             </div>
             <ul id="messages"></ul>
+            
             <div class="bottomBox">
                 <form action="" id="messageForm">
                     <input id="m" autocomplete="off" autofocus /><button>Send</button>
                 </form>
                 <form action="" id="uploadFile">
-                    <input type="file" name="pic" accept="image/*"/><button>Upload image</button>
+                    <input type="file" name="pic" accept="image/*"/>
                 </form>
             </div>
         </div>

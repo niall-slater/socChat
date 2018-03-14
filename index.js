@@ -60,7 +60,7 @@ io.on('connection', function(socket) {
     });
     
     socket.on('base64 file', function (msg) {
-        console.log('received base64 file ' + msg.fileName + ' from' + msg.username);
+        console.log('received base64 file ' + msg.fileName + ' from ' + msg.username);
         socket.username = msg.username;
         io.emit('base64 file', {
               username: socket.username,
