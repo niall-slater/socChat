@@ -17,7 +17,7 @@ io.on('connection', function(socket) {
     console.log(people[socket.id] + ' connected.');
     
 	io.emit('refresh list', people);
-    socket.to(socket.id).emit('populate messages', messageHistory);
+    socket.emit('populate messages', messageHistory);
     
     socket.on('name init', function(username) {
         var idName = people[socket.id];

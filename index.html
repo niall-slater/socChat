@@ -25,6 +25,7 @@
             #messages li:nth-child(odd) { background: #ffffff; }
             #messages img {margin: 2px; max-width: 400px; padding: 8px; background-color: rgba(222, 222, 222, 0.9);}
             
+            /* Quick hacky workaround to ensure the text field stays visible. I'm a busy man! */
             @media only screen and (max-height: 500px) {
                 
                 #messages { max-height: 70vh;}
@@ -98,6 +99,7 @@
 				for (var i = 0; i < history.length; i++) {
 				    $('#messages').append($('<li>').text(history[i]));
                 }
+                scrollToBottom();
 			});
             
             //Send file on upload
