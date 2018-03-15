@@ -50,8 +50,12 @@
         
         /* CLIENTSIDE CHAT SCRIPT */
         
-        document.addEventListener('DOMContentLoaded', function () {
-                
+        var username = 'Guest-' + Math.floor(Math.random()*99);
+        
+		$(function () {
+            
+            /* Set up desktop notifications */
+            
             if (!Notification) {
                 alert('Desktop notifications not available in your browser.'); 
                 return;
@@ -59,44 +63,37 @@
 
             if (Notification.permission !== "granted")
                 Notification.requestPermission();
-        });
-
-        function notify(title, msg) {
-
-            if (Notification.permission !== "granted")
-                Notification.requestPermission();
-            else {
-                var notification = new Notification(title, {
-                icon: getRandomIconURL(),
-                body: msg,
-                });
-
-                notification.onclick = function () {
-                    window.focus();
-                };
-                setTimeout(function() {
-                    notification.close();
-                }, '1500');
-            }
-        }
         
-        function getRandomIconURL() {
-            var rand = Math.random();
+            /* Set up event handlers for drag-and-drop image upload */
             
-            if (rand > 0.7) {
-                return "https://i.imgur.com/mC6CFeC.png";
+            let dropArea = document.getElementById('messages');
+
+            dropArea.addEventListener('drop', handleDrop, false);
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false)
+            });
+            
+            function preventDefaults (e) {
+                e.preventDefault()
+                e.stopPropagation()
             }
-            if (rand > 0.5) {
-                return "https://i.imgur.com/Aa4yqC0.png";
-            }
-            else {
-                return "https://i.imgur.com/6Fl6z3Z.png";
-            }
-        }
+
+            dropArea.addEventListener('dragover', handleDrag, false);
         
-        var username = 'Guest-' + Math.floor(Math.random()*99);
-        
-		$(function () {
+            function handleDrop(e) {
+                let dt = e.dataTransfer;
+                let files = dt.files;
+
+                var data = files[0];
+                readThenSendFile(data);      
+            }
+
+            function handleDrag(e) {
+
+            }
+            
+            /* Set up websockets and message events */
             
 			var socket = io();
             
@@ -168,7 +165,6 @@
                 scrollToBottom();
             });
             
-        
             function readThenSendFile(data) {
 
                 var reader = new FileReader();
@@ -189,13 +185,48 @@
                 var el = document.getElementById("messages");
                 el.scrollTop = el.scrollHeight;
             }
-		});
+        
+            /* HELPER FUNCTIONS */
 
-		function getCookie(name) {
-			var value = "; " + document.cookie;
-			var parts = value.split("; " + name + "=");
-			if (parts.length == 2) return parts.pop().split(";").shift();
-		}
+            function getCookie(name) {
+                var value = "; " + document.cookie;
+                var parts = value.split("; " + name + "=");
+                if (parts.length == 2) return parts.pop().split(";").shift();
+            }
+
+            function notify(title, msg) {
+
+                if (Notification.permission !== "granted")
+                    Notification.requestPermission();
+                else {
+                    var notification = new Notification(title, {
+                    icon: getRandomIconURL(),
+                    body: msg,
+                    });
+
+                    notification.onclick = function () {
+                        window.focus();
+                    };
+                    setTimeout(function() {
+                        notification.close();
+                    }, '1500');
+                }
+            }
+
+            function getRandomIconURL() {
+                var rand = Math.random();
+
+                if (rand > 0.7) {
+                    return "https://i.imgur.com/mC6CFeC.png";
+                }
+                if (rand > 0.5) {
+                    return "https://i.imgur.com/Aa4yqC0.png";
+                }
+                else {
+                    return "https://i.imgur.com/6Fl6z3Z.png";
+                }
+            }
+		});
         
 	</script>
     <body>
@@ -205,15 +236,17 @@
                     <input id="n" autocomplete="off" /><button>Set name</button>
                 </form>
             </div>
-            <ul id="messages"></ul>
             
-            <div class="bottomBox">
-                <form action="" id="messageForm">
-                    <input id="m" autocomplete="off" autofocus />
-                </form>
-                <form action="" id="uploadFile">
-                    <input type="file" name="pic" accept="image/*"/>
-                </form>
+            <div id="dropArea">
+                <ul id="messages"></ul>
+                <div class="bottomBox">
+                    <form action="" id="messageForm">
+                        <input id="m" autocomplete="off" autofocus />
+                    </form>
+                    <form action="" id="uploadFile">
+                        <input type="file" name="pic" accept="image/*"/>
+                    </form>
+                </div>
             </div>
         </div>
         
