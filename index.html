@@ -97,7 +97,12 @@
             //Populate the chat window with messages from before we connected
 			socket.on('populate messages', function(history) {
 				for (var i = 0; i < history.length; i++) {
-				    $('#messages').append($('<li>').text(history[i]));
+                    if (typeof history[i] == 'string') {
+				        $('#messages').append($('<li>').text(history[i]));
+                    } else if (typeof history[i] == 'object') {
+                        $('#messages').append($('<li>').text(history[i].username + " sent an image:"));
+                        $('#messages').append($('<img>',{id:history[i].fileName,src:history[i].file}));
+                    }
                 }
                 scrollToBottom();
 			});
