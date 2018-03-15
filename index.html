@@ -61,7 +61,7 @@
                 Notification.requestPermission();
         });
 
-        function notifyMe(title, msg) {
+        function notify(title, msg) {
 
             if (Notification.permission !== "granted")
                 Notification.requestPermission();
@@ -124,7 +124,7 @@
             
 			socket.on('chat message', function(msg) {
 				$('#messages').append($('<li>').text(msg));
-                notifyMe('New message', msg);
+                notify('New message', msg);
                 scrollToBottom();
 			});
             
@@ -164,6 +164,7 @@
                 console.log("Received file " + msg.fileName + " from " + msg.username);
                 $('#messages').append($('<li>').text(msg.username + " sent an image:"));
                 $('#messages').append($('<img>',{id:msg.fileName,src:msg.file}));
+                notify('New message', msg.username + " sent an image.");
                 scrollToBottom();
             });
             
