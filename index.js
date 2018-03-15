@@ -14,7 +14,8 @@ app.get('/', function(req, res) {
 io.on('connection', function(socket) {
     
     people[socket.id] = socket.id;
-    console.log(people[socket.id] + ' connected.');
+    var connectionMsg = people[socket.id] + ' connected.'
+    console.log(connectionMsg);
     
 	io.emit('refresh list', people);
     socket.emit('populate messages', messageHistory);
@@ -33,6 +34,7 @@ io.on('connection', function(socket) {
         io.emit('chat message', oldName + " changed name to " + username);
         console.log(oldName + " changed name to " + username);
         io.emit('refresh list', people);
+        messageHistory.push(oldName + " changed name to " + username);
     });
     
     socket.on('name load', function(username) {
@@ -43,6 +45,7 @@ io.on('connection', function(socket) {
         
         io.emit('chat message', username + " joined the chat.");
         io.emit('refresh list', people);
+        messageHistory.push(username + " joined the chat.");
     });
     
     socket.on('chat message', function(msg) {
@@ -53,8 +56,10 @@ io.on('connection', function(socket) {
     });
     
     socket.on('disconnect', function() {
-		console.log(people[socket.id] + ' disconnected.');
-		io.emit('chat message', people[socket.id] + ' disconnected.');
+        var msg = people[socket.id] + ' disconnected.';
+		io.emit('chat message', msg);
+		console.log(msg);
+        messageHistory.push(msg);
 		delete(people[socket.id]);
 		io.emit('refresh list', people);
     });
