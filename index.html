@@ -3,14 +3,16 @@
     <head>
         <title>SoA chat</title>
         <style>
-            body { font: 13px Helvetica, Arial; display: flex; height: 90vh; background-color: #ededed}
+            body { font: 13px Helvetica, Arial; display: flex; background-color: #ededed}
             
-            .mainWrapper {width: 80%; height: 90%; top: 0; position: fixed; left: 2px;}
-            .sideBarWrapper {width: 16%; position: fixed; right: 2px; top:0px;}
+            .mainWrapper {width: 80%; flex-wrap: nowrap; flex-direction: column;}
+            .sideBarWrapper {width: 16%;}
             
-            .topBox {padding: 3px; position: relative; top: 0; width: 100%;}
-            .bottomBox {padding: 3px; position: fixed; bottom: 0; width: 81%; height: 20%;}
-            input { border: 2px solid rgb(209, 209, 209); border-radius: 4px; margin-right: 2px; padding: 10px; width: 80%;}
+            .topBox {padding: 3px;}
+            .bottomBox {padding: 3px; bottom: 1px;}
+            
+            form { display: inline-flex;}
+            input { border: 2px solid rgb(209, 209, 209); border-radius: 4px; margin-right: 2px; padding: 10px;}
             button { padding: 3px; background: #a8fde3; border: 2px solid rgba(204, 204, 204, 0.98); padding: 10px; border-radius: 4px; }
             
             .userListContainer { padding: 0px 5px; background-color: #ffffff; top: 0px; border-radius: 2px; border: 2px solid #e6e6e6; word-wrap: break-word; font-size: .8em;}
@@ -18,10 +20,27 @@
             .userList li {}
             .userList li:nth-child(odd) { background: #ddd;}
             
-            #messages { list-style-type: none; margin-left: 0; padding-left: 1%; padding-bottom: 0px; width: 98%; height: 80%; overflow: auto;}
-            #messages li { padding: 5px 1px; word-wrap: break-word;}
+            #messages { list-style-type: none; margin-left: 0; padding-left: 1%; padding-bottom: 0px; overflow: auto; max-height: 75vh;}
+            #messages li { padding: 5px 1px; word-wrap: break-word;;}
             #messages li:nth-child(odd) { background: #ffffff; }
             #messages img {margin: 2px; max-width: 400px; padding: 8px; background-color: rgba(222, 222, 222, 0.9);}
+            
+            @media only screen and (max-height: 500px) {
+                
+                #messages { max-height: 70vh;}
+            }
+            @media only screen and (max-height: 400px) {
+                
+                #messages { max-height: 65vh;}
+            }
+            @media only screen and (max-height: 300px) {
+                
+                #messages { max-height: 50vh;}
+            }
+            @media only screen and (max-height: 200px) {
+                
+                #messages { max-height: 45vh;}
+            }
         </style>
     </head>
     <script src="/socket.io/socket.io.js"></script>
@@ -136,7 +155,7 @@
             
             <div class="bottomBox">
                 <form action="" id="messageForm">
-                    <input id="m" autocomplete="off" autofocus /><button>Send</button>
+                    <input id="m" autocomplete="off" autofocus />
                 </form>
                 <form action="" id="uploadFile">
                     <input type="file" name="pic" accept="image/*"/>
