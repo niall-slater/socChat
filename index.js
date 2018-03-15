@@ -20,12 +20,12 @@ io.on('connection', function(socket) {
 	io.emit('refresh list', people);
     socket.emit('populate messages', messageHistory);
     
-    socket.on('name init', function(username) {
+//    socket.on('name init', function(username) {
         var idName = people[socket.id];
         console.log("Socket " + idName + " assigned username " + username);
         people[socket.id] = username;
         io.emit('refresh list', people);
-    });
+    //});
     
     socket.on('name change', function(username) {
         
