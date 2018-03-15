@@ -50,9 +50,54 @@
         
         /* CLIENTSIDE CHAT SCRIPT */
         
+        document.addEventListener('DOMContentLoaded', function () {
+                
+            if (!Notification) {
+                alert('Desktop notifications not available in your browser.'); 
+                return;
+            }
+
+            if (Notification.permission !== "granted")
+                Notification.requestPermission();
+        });
+
+        function notifyMe(title, msg) {
+
+            if (Notification.permission !== "granted")
+                Notification.requestPermission();
+            else {
+                var notification = new Notification(title, {
+                icon: getRandomIconURL(),
+                body: msg,
+                });
+
+                notification.onclick = function () {
+                    window.focus();
+                };
+                setTimeout(function() {
+                    notification.close();
+                }, '1500');
+            }
+        }
+        
+        function getRandomIconURL() {
+            var rand = Math.random();
+            
+            if (rand > 0.7) {
+                return "https://i.imgur.com/mC6CFeC.png";
+            }
+            if (rand > 0.5) {
+                return "https://i.imgur.com/Aa4yqC0.png";
+            }
+            else {
+                return "https://i.imgur.com/6Fl6z3Z.png";
+            }
+        }
+        
         var username = 'Guest-' + Math.floor(Math.random()*99);
         
 		$(function () {
+            
 			var socket = io();
             
             socket.emit('name init', username);
@@ -79,6 +124,7 @@
             
 			socket.on('chat message', function(msg) {
 				$('#messages').append($('<li>').text(msg));
+                notifyMe('New message', msg);
                 scrollToBottom();
 			});
             
