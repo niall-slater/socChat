@@ -196,9 +196,10 @@
             }
 
             function notify(title, msg) {
-
-                if (Notification.permission !== "granted")
-                    Notification.requestPermission();
+                
+                if (Notification.permission !== "granted") {
+                    //Permission will usually be denied because we're not using SSL, so use the legacy method
+                }
                 else {
                     var notification = new Notification(title, {
                     icon: getRandomIconURL(),
@@ -211,7 +212,15 @@
                     setTimeout(function() {
                         notification.close();
                     }, '2500');
+                    return;
                 }
+                
+                console.log("Trying legacy notification");
+                
+                var legacyNotification = new Notification(title, { icon: getRandomIconURL, body: msg})
+                legacyNotification.onshow = function() { setTimeout(legacyNotification.close, 2500) }
+                
+                console.log(legacyNotification);
             }
 
             function getRandomIconURL() {
