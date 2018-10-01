@@ -82,7 +82,7 @@ function getNameFromID(id) {
     return people[id];
 }
 
-var port = 3000;
+var port = process.env.PORT || 3000;
 
 http.listen(port, function() {
     console.log('listening on *:' + port);
